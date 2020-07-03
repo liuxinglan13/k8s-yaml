@@ -33,7 +33,7 @@ spec:
             mountPath: "/var/atlassian/application-data/jira"
       dnsConfig: {}
       restartPolicy: Always
-      volumes:
+      volumes:                           # 使用PVC挂载数据持久化,这个目录不持久化的化,删除容器后会找不到数据库,变成初始化状态.
       - name: jira-data
         persistentVolumeClaim:
           claimName: jira-data
@@ -51,7 +51,6 @@ metadata:
 spec:
   ports:
     - name: wfr7rd
-      nodePort: .nan
       port: 8080
       protocol: TCP
       targetPort: 8080

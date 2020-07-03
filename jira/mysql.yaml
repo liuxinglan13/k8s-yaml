@@ -11,8 +11,8 @@ data:
    default-time-zone='+8:00'
    max_connections=500
    innodb_lock_wait_timeout=500
-   default-storage-engine=INNODB
-   innodb_default_row_format=DYNAMIC
+   default-storage-engine=INNODB         #以下配置根据JIRA官方文档要求设置
+   innodb_default_row_format=DYNAMIC     
    innodb_large_prefix=ON
    innodb_file_format=Barracuda
    innodb_log_file_size=2G
