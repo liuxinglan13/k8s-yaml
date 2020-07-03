@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kibanaingressroute
+  namespace: logging
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`kibana.rokin.com`) 
+    kind: Rule
+    services:
+    - name: kibana
+      port: 5601

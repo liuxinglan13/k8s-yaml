@@ -1,0 +1,28 @@
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: 'true'
+  hosts:
+    - drone.qikqiak.com
+  tls:
+    - secretName: drone-tls
+      hosts:
+        - drone.qikqiak.com
+
+sourceControl:
+  provider: github
+  github:
+    clientID: d583cf9d026dbd18c097
+    clientSecretKey: clientSecret
+    clientSecretValue: 5650db3fc00ed0525de1ee4c87d2613760e01089
+    server: https://github.com
+
+server:
+  adminUser: liuxinglan7  
+  kubernetes:
+    enabled: true
+    
+persistence:
+  enabled: true
+  existingClaim: dronepvc

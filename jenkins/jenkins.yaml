@@ -1,0 +1,53 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: jenkins
+spec:
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      terminationGracePeriodSeconds: 10
+      serviceAccountName: jenkins
+      containers:
+      - name: jenkins
+        image: 172.16.130.72/basis/jenkins
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: web
+          protocol: TCP
+        - containerPort: 50000
+          name: agent
+          protocol: TCP
+        volumeMounts:
+        - name: jenkinshome
+          mountPath: /var/jenkins_home
+      securityContext:
+        fsGroup: 1000
+      volumes:
+      - name: jenkinshome
+        persistentVolumeClaim:
+          claimName: opspvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins2
+  namespace: kube-ops
+  labels:
+    app: jenkins2
+spec:
+  selector:
+    app: jenkins2
+  ports:
+  - name: web
+    port: 8080
+    targetPort: web
+  - name: agent
+    port: 50000
+    targetPort: agent

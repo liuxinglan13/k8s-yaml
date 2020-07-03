@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kuboardingressroute
+  namespace: kube-system
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`kuboard.rokin.com`) 
+    kind: Rule
+    services:
+    - name: kuboard
+      port: 80

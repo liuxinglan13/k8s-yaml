@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Configmap
+metadata:
+  name: mdm-configmap
+  namespace: mdm
+data:
+  contextxml: |
+  <?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <WatchedResource>WEB-INF/tomcat-web.xml</WatchedResource>
+    <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+    <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://service-mdm-mysql:3306/hmdm" name="jdbc/hmdmm
+" type="javax.sql.DataSource" username="hmdm_uat" password="hmdm@uat123"/>
+</Context>

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zk1
+  namespace: zookeeper
+spec:
+  selector:
+    matchLabels:
+      app: zk
+  serviceName: zk-hs
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zk
+    spec:
+      containers:
+      - name: kubernetes-zookeeper
+        imagePullPolicy: Always
+        image: "172.16.130.72/basis/zookeeper"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "0.5"
+        ports:
+        - containerPort: 2181
+          name: client
+        - containerPort: 2888
+          name: server
+        - containerPort: 3888
+          name: leader-election
+        env:
+        - name: ZOO_MY_ID
+          value: "1"
+        - name: ZOO_SERVERS
+          value: server.1=zk1-0:2888:3888;2181 server.2=zk2-0:2888:3888;2181 server.3=zk3-0:2888:3888;2181
+        volumeMounts:
+        - name: datadir
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      volumeMode: Filesystem
+      storageClassName: nfs
+      accessModes: [ "ReadWriteMany" ]
+      resources:
+        requests:
+          storage: 2G

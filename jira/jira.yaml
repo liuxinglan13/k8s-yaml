@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    k8s.kuboard.cn/ingress: 'false'
+    k8s.kuboard.cn/service: NodePort
+    k8s.kuboard.cn/workload: web-jira
+  labels:
+    k8s.kuboard.cn/layer: web
+    k8s.kuboard.cn/name: web-jira
+  name: web-jira
+  namespace: jira
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s.kuboard.cn/layer: web
+      k8s.kuboard.cn/name: web-jira
+  template:
+    metadata:
+      labels:
+        k8s.kuboard.cn/layer: web
+        k8s.kuboard.cn/name: web-jira
+    spec:
+      containers:
+        -
+          image: '172.16.130.72/library/atlassian-jira-software:8.2.0'
+          imagePullPolicy: Always
+          name: jira
+          volumeMounts:
+          - name: "jira-data"
+            mountPath: "/var/atlassian/application-data/jira"
+      dnsConfig: {}
+      restartPolicy: Always
+      volumes:
+      - name: jira-data
+        persistentVolumeClaim:
+          claimName: jira-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    k8s.kuboard.cn/workload: web-jira
+  labels:
+    k8s.kuboard.cn/layer: web
+    k8s.kuboard.cn/name: web-jira
+  name: web-jira
+  namespace: jira
+spec:
+  ports:
+    - name: wfr7rd
+      nodePort: .nan
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    k8s.kuboard.cn/layer: web
+    k8s.kuboard.cn/name: web-jira
+  type: NodePort

@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: simpleingressroute
+  namespcae: nextcloud
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`nextcloud.rokin.com`) 
+    kind: Rule
+    services:
+    - name: web-nextcloud
+      port: 80

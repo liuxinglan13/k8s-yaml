@@ -1,0 +1,36 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mariadb
+  namespace: nextcloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb
+        image: 172.16.130.72/basis/mariadb
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: mariadb-data
+          mountPath: "/var/lib/mysql"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "root00--"
+        - name: MYSQL_PASSWORD
+          value: "root00--"
+        - name: MYSQL_DATABASE
+          value: "nextcloud"
+        - name: MYSQL_USER
+          value: "nextcloud"
+      volumes:
+        - name: mariadb-data
+          persistentVolumeClaim:
+            claimName: mariadb-data
+       
