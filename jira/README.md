@@ -15,5 +15,11 @@ COPY mysql-connector-java-5.1.49.jar /opt/atlassian/jira/lib
 
 
 
+#### 初始化数据库
 
+```
+CREATE DATABASE jiradb CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+GRANT ALL on jiradb.* TO 'jira'@'%' IDENTIFIED BY 'Jira#123';
+flush privileges;
+```
 

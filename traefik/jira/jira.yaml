@@ -1,0 +1,46 @@
+# 这是一个treafik代理的配置文件实例
+# http自动跳转https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jira-ingressroutetls
+  namespace: jira
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`jira.rokin.cn`)
+    kind: Rule
+    services:
+    - name: web-jira
+      port: 8080
+    middlewares:                 # 中间件
+    - name: redirect-https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jira-ingressroutetls-tls
+  namespace: jira
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`jira.rokin.cn`)
+    kind: Rule
+    services:
+    - name: web-jira
+      port: 8080
+  tls:                            
+    secretName: rokin-tls        # secret需手动创建在此namespace下
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+  namespace: jira
+spec:
+  redirectScheme:
+    scheme: https
+---
