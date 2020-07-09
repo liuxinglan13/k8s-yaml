@@ -1,0 +1,59 @@
+version: '2'
+services:
+  master:
+    image: 172.16.130.72/basis/redis
+    restart: always
+    container_name: redis-master
+    #使用主机网络
+    network_mode: "host"
+    command: redis-server --port 16379  
+    volumes:
+     - $PWD/data1:/data
+
+  slave1:
+    image: 172.16.130.72/basis/redis
+    restart: always
+    container_name: redis-slave-1
+    network_mode: "host"
+    # 指定端口并指定master ip 端口
+    command: redis-server --port 16380 --slaveof 172.16.150.70 16379    #宿主机IP
+    volumes:
+     - $PWD/data2:/data
+
+  slave2:
+    image: 172.16.130.72/basis/redis
+    restart: always
+    container_name: redis-slave-2
+    network_mode: "host"    
+    command: redis-server --port 16381 --slaveof 172.16.150.70 16379  #宿主机IP
+    volumes:
+     - $PWD/data3:/data
+     
+  sentinel1:
+    image: 172.16.130.72/basis/redis
+    restart: always
+    container_name: redis-sentinel-1
+    network_mode: "host"
+    # 指定sentinel文件位置
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    # 使用数据卷映射文件到指定sentinel位置
+    volumes:
+      - ./sentinel1.conf:/usr/local/etc/redis/sentinel.conf
+   
+  sentinel2:
+    image: 172.16.130.72/basis/redis
+    restart: always
+    container_name: redis-sentinel-2
+    network_mode: "host"    
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    volumes:
+      - ./sentinel2.conf:/usr/local/etc/redis/sentinel.conf
+   
+  sentinel3:
+    image: 172.16.130.72/basis/redis
+    restart: always
+    container_name: redis-sentinel-3
+    network_mode: "host"    
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    volumes:
+      - ./sentinel3.conf:/usr/local/etc/redis/sentinel.conf
