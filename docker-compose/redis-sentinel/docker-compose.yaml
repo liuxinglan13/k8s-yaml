@@ -6,7 +6,7 @@ services:
     container_name: redis-master
     #使用主机网络
     network_mode: "host"
-    command: redis-server --port 16379  
+    command: redis-server --port 16379 --appendonly yes
     volumes:
      - $PWD/data1:/data
 
@@ -16,7 +16,7 @@ services:
     container_name: redis-slave-1
     network_mode: "host"
     # 指定端口并指定master ip 端口
-    command: redis-server --port 16380 --slaveof 172.16.150.70 16379    #宿主机IP
+    command: redis-server --port 16380 --slaveof 172.16.150.70 16379 --appendonly yes
     volumes:
      - $PWD/data2:/data
 
@@ -25,7 +25,7 @@ services:
     restart: always
     container_name: redis-slave-2
     network_mode: "host"    
-    command: redis-server --port 16381 --slaveof 172.16.150.70 16379  #宿主机IP
+    command: redis-server --port 16381 --slaveof 172.16.150.70 16379 --appendonly yes
     volumes:
      - $PWD/data3:/data
      
@@ -42,7 +42,7 @@ services:
    
   sentinel2:
     image: 172.16.130.72/basis/redis
-    restart: always
+    restart: always9
     container_name: redis-sentinel-2
     network_mode: "host"    
     command: redis-sentinel /usr/local/etc/redis/sentinel.conf
